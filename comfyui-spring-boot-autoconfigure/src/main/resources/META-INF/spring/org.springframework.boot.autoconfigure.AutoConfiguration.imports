@@ -1,0 +1,3 @@
+com.comfyui.ComfyUIClientAutoConfiguration
+com.comfyui.queue.ComfyUIQueueAutoConfiguration
+com.comfyui.queue.ComfyUIRabbitAutoConfiguration
