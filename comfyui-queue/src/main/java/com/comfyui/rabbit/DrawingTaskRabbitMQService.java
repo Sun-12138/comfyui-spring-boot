@@ -53,8 +53,21 @@ public class DrawingTaskRabbitMQService implements IDrawingTaskSubmit, ITaskProc
      */
     @Override
     public boolean submit(DrawingTaskInfo taskInfo) {
-        amqpTemplate.convertAndSend(RabbitQueueConfig.TASK_EXCHANGE, RabbitQueueConfig.TASK_ROUTING_KEY, new DrawingTaskInfoMQMessage(taskInfo).toString());
-        return true;
+        try {
+            amqpTemplate.convertAndSend(RabbitQueueConfig.TASK_EXCHANGE, RabbitQueueConfig.TASK_ROUTING_KEY, new DrawingTaskInfoMQMessage(taskInfo).toString());
+            return true;
+        } catch (Exception e) {
+            //发生错误 重试五次
+            for (int i = 0; i < 5; i++) {
+                try {
+                    amqpTemplate.convertAndSend(RabbitQueueConfig.TASK_EXCHANGE, RabbitQueueConfig.TASK_ROUTING_KEY, new DrawingTaskInfoMQMessage(taskInfo).toString());
+                } catch (Exception ignored) {
+                    continue;
+                }
+                return true;
+            }
+            return false;
+        }
     }
 
     /**
