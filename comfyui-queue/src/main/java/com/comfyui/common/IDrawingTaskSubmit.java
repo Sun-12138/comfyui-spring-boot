@@ -2,6 +2,7 @@ package com.comfyui.common;
 
 /**
  * 绘图任务提交接口
+ * @author Sun_12138
  */
 public interface IDrawingTaskSubmit {
 

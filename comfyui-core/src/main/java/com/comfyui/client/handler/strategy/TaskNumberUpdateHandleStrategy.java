@@ -1,13 +1,17 @@
 package com.comfyui.client.handler.strategy;
 
-import com.comfyui.client.enums.ComfyUITaskMsgType;
+import com.comfyui.client.enums.ComfyTaskMsgType;
 import com.comfyui.client.handler.TaskProcessSender;
-import com.comfyui.entity.ComfyUITaskNumber;
+import com.comfyui.entity.ComfyTaskNumber;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
 
+/**
+ * 队列任务数量更新
+ * @author Sun_12138
+ */
 @Component
-public class TaskNumberUpdateHandleStrategy implements IComfyUIWebSocketTextHandleStrategy {
+public class TaskNumberUpdateHandleStrategy implements IComfyWebSocketTextHandleStrategy {
     /**
      * 处理消息
      *
@@ -17,8 +21,8 @@ public class TaskNumberUpdateHandleStrategy implements IComfyUIWebSocketTextHand
      * @param ctx           上下文任务状态
      */
     @Override
-    public void handleMessage(ComfyUITaskMsgType msgType, JsonNode dataNode, TaskProcessSender processSender, TaskHandlerStrategyContext ctx) {
+    public void handleMessage(ComfyTaskMsgType msgType, JsonNode dataNode, TaskProcessSender processSender, TaskHandlerStrategyContext ctx) {
         int taskNumber = dataNode.get("status").get("exec_info").get("queue_remaining").asInt();
-        processSender.taskNumberUpdate(new ComfyUITaskNumber(taskNumber));
+        processSender.taskNumberUpdate(new ComfyTaskNumber(taskNumber));
     }
 }

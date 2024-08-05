@@ -1,17 +1,18 @@
 package com.comfyui.client.handler.process;
 
 import com.comfyui.client.enums.TaskProcessType;
-import com.comfyui.entity.IComfyUITaskProcess;
+import com.comfyui.entity.IComfyTaskProcess;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 /**
  * 任务进度消息
  *
+ * @author Sun_12138
  * @param <T> 消息类型
  */
 @Getter
-public class TaskProcessInfo<T extends IComfyUITaskProcess> extends ApplicationEvent {
+public class TaskProcessInfo<T extends IComfyTaskProcess> extends ApplicationEvent {
 
     /**
      * 事件类型

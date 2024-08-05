@@ -2,16 +2,16 @@ package com.comfyui.common;
 
 import com.comfyui.TaskErrorException;
 import com.comfyui.TaskTimeoutException;
-import com.comfyui.client.ComfyUIWebSocketClient;
+import com.comfyui.client.ComfyWebSocketClient;
 import com.comfyui.client.enums.TaskProcessType;
 import com.comfyui.client.handler.TaskProcessSender;
 import com.comfyui.client.handler.process.ITaskProcessSubjectSubscriber;
 import com.comfyui.client.handler.process.TaskProcessInfo;
 import com.comfyui.client.handler.process.TaskProcessPublisher;
-import com.comfyui.entity.ComfyUITaskError;
-import com.comfyui.entity.IComfyUITaskProcess;
-import com.comfyui.node.ComfyUIWorkFlow;
-import com.comfyui.client.ComfyUIClient;
+import com.comfyui.entity.ComfyTaskError;
+import com.comfyui.entity.IComfyTaskProcess;
+import com.comfyui.node.ComfyWorkFlow;
+import com.comfyui.client.ComfyClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +21,7 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * 绘图任务执行者
+ * @author Sun_12138
  */
 @Component
 @RequiredArgsConstructor
@@ -39,12 +40,12 @@ public class DrawingTaskExecutor {
     /**
      * ComfyUI服务端
      */
-    private final ComfyUIClient comfyUIClient;
+    private final ComfyClient comfyClient;
 
     /**
      * ComfyUI WebSocket任务进度监听
      */
-    private final ComfyUIWebSocketClient comfyUIWebSocketClient;
+    private final ComfyWebSocketClient comfyWebSocketClient;
 
     /**
      * 执行绘图任务
@@ -63,7 +64,7 @@ public class DrawingTaskExecutor {
      * @param timeout 超时时间
      * @param unit    时间单位
      */
-    public void execDrawingTask(String taskId, ComfyUIWorkFlow flow, long timeout, TimeUnit unit) {
+    public void execDrawingTask(String taskId, ComfyWorkFlow flow, long timeout, TimeUnit unit) {
         //注册任务进度观察者
         CountDownLatch latch = new CountDownLatch(1);
         //订阅任务结束事件
@@ -72,25 +73,27 @@ public class DrawingTaskExecutor {
         publisher.subscribe(taskId, TaskProcessType.COMPLETE, subscriber);
         publisher.subscribe(taskId, TaskProcessType.ERROR, subscriber);
         //提交绘图任务并开始监听任务进度
-        String comfyUITaskId = comfyUIWebSocketClient.startDrawingTask(taskId, flow);
+        String comfyTaskId = comfyWebSocketClient.startDrawingTask(taskId, flow);
         //此处进行阻塞，等待绘图任务完成
         try {
-            if (!latch.await(timeout, unit)) throw new TimeoutException();
+            if (!latch.await(timeout, unit)) {
+                throw new TimeoutException();
+            }
         } catch (InterruptedException e) {
             //发生错误则取消当前任务
-            comfyUIClient.cancelRunningTask();
+            comfyClient.cancelRunningTask();
             //停止监听进度
-            comfyUIWebSocketClient.stopDrawingTask();
+            comfyWebSocketClient.stopDrawingTask();
             //发送任务失败信息
-            taskProcessSender.taskError(new ComfyUITaskError(taskId, comfyUITaskId, "监听绘图任务线程被中断"));
+            taskProcessSender.taskError(new ComfyTaskError(taskId, comfyTaskId, "监听绘图任务线程被中断"));
             throw new TaskErrorException(taskId, "监听绘图任务线程被中断");
         } catch (TimeoutException e) {
             //发生错误则取消当前任务
-            comfyUIClient.cancelRunningTask();
+            comfyClient.cancelRunningTask();
             //停止监听进度
-            comfyUIWebSocketClient.stopDrawingTask();
+            comfyWebSocketClient.stopDrawingTask();
             //发送任务失败信息
-            taskProcessSender.taskError(new ComfyUITaskError(taskId, comfyUITaskId, "绘图任务超时"));
+            taskProcessSender.taskError(new ComfyTaskError(taskId, comfyTaskId, "绘图任务超时"));
             throw new TaskTimeoutException(taskId);
         } finally {
             //退订消息
@@ -105,7 +108,7 @@ public class DrawingTaskExecutor {
     private record TaskCompleteSubscriber(CountDownLatch latch) implements ITaskProcessSubjectSubscriber {
 
         @Override
-        public <T extends IComfyUITaskProcess> void notify(TaskProcessInfo<T> event) {
+        public <T extends IComfyTaskProcess> void notify(TaskProcessInfo<T> event) {
             latch.countDown();
         }
     }

@@ -2,8 +2,9 @@ package com.comfyui.node.info.param;
 
 /**
  * String类型的节点输入信息
+ * @author Sun_12138
  */
-public class InputParamInfoByString extends InputParamInfo {
+public class InputParamInfoByString extends AbstractInputParamInfo {
 
 
     /**

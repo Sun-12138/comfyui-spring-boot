@@ -1,5 +1,8 @@
 package com.comfyui.rabbit;
 
+/**
+ * @author Sun_12138
+ */
 public class RabbitQueueConfig {
     /**
      * 绘图任务队列

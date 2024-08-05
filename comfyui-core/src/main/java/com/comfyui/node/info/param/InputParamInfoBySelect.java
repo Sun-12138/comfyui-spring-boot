@@ -4,8 +4,9 @@ import java.util.List;
 
 /**
  * Select选择器类型的节点输入信息
+ * @author Sun_12138
  */
-public class InputParamInfoBySelect extends InputParamInfo {
+public class InputParamInfoBySelect extends AbstractInputParamInfo {
     /**
      * 创建类型为Select的参数信息
      *

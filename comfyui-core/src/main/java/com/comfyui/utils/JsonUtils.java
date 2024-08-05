@@ -8,13 +8,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Sun_12138
+ */
 public class JsonUtils {
 
-    public static final ObjectMapper objectMapper = new ObjectMapper();
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     static {
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+        OBJECT_MAPPER.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        OBJECT_MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
     }
 
     /**
@@ -40,7 +43,7 @@ public class JsonUtils {
     public static <T> T toObject(String json, Class<T> valueType) {
         T t;
         try {
-            t = objectMapper.readValue(json, valueType);
+            t = OBJECT_MAPPER.readValue(json, valueType);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -68,7 +71,7 @@ public class JsonUtils {
     public static <T> Map<String, T> toMapObject(String json, Class<T> valueType) {
         Map<String, T> t;
         try {
-            t = objectMapper.readerForMapOf(valueType).readValue(json);
+            t = OBJECT_MAPPER.readerForMapOf(valueType).readValue(json);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -96,7 +99,7 @@ public class JsonUtils {
     public static <T> List<T> toListObject(String json, Class<T> valueType) {
         List<T> t;
         try {
-            t = objectMapper.readerForListOf(valueType).readValue(json);
+            t = OBJECT_MAPPER.readerForListOf(valueType).readValue(json);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -112,7 +115,7 @@ public class JsonUtils {
     public static JsonNode toJsonNode(String json) {
         JsonNode node;
         try {
-            node = objectMapper.readTree(json);
+            node = OBJECT_MAPPER.readTree(json);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -126,7 +129,7 @@ public class JsonUtils {
      * @return JsonNode对象
      */
     public static JsonNode toJsonNode(Object object) {
-        return objectMapper.valueToTree(object);
+        return OBJECT_MAPPER.valueToTree(object);
     }
 
     /**
@@ -138,7 +141,7 @@ public class JsonUtils {
     public static String toJsonString(Object object) {
         String json;
         try {
-            json = objectMapper.writeValueAsString(object);
+            json = OBJECT_MAPPER.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

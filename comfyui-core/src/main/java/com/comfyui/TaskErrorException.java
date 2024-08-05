@@ -2,6 +2,7 @@ package com.comfyui;
 
 /**
  * ComfyUI绘图任务发生错误
+ * @author Sun_12138
  */
 public class TaskErrorException extends RuntimeException {
 

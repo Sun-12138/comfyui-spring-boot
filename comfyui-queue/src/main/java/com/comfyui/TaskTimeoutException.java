@@ -2,6 +2,7 @@ package com.comfyui;
 
 /**
  * ComfyUI绘图任务超时
+ * @author Sun_12138
  */
 public class TaskTimeoutException extends RuntimeException {
 

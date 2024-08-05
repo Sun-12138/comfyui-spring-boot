@@ -9,6 +9,7 @@ import java.util.Set;
 
 /**
  * 任务进度发送者 将任务进度发送到ITaskProcessReceiver接口
+ * @author Sun_12138
  */
 @Component
 public class TaskProcessSender implements ITaskProcessReceiver {
@@ -40,7 +41,7 @@ public class TaskProcessSender implements ITaskProcessReceiver {
      * @param start 任务开始信息
      */
     @Override
-    public void taskStart(ComfyUITaskStart start) {
+    public void taskStart(ComfyTaskStart start) {
         handlers.forEach(handler -> handler.taskStart(start));
     }
 
@@ -50,7 +51,7 @@ public class TaskProcessSender implements ITaskProcessReceiver {
      * @param progress 进度信息
      */
     @Override
-    public void taskNodeProgress(ComfyUITaskNodeProgress progress) {
+    public void taskNodeProgress(ComfyTaskNodeProgress progress) {
         handlers.forEach(handler -> handler.taskNodeProgress(progress));
     }
 
@@ -60,7 +61,7 @@ public class TaskProcessSender implements ITaskProcessReceiver {
      * @param preview 预览图信息
      */
     @Override
-    public void taskProgressPreview(ComfyUITaskProgressPreview preview) {
+    public void taskProgressPreview(ComfyTaskProgressPreview preview) {
         handlers.forEach(handler -> handler.taskProgressPreview(preview));
     }
 
@@ -70,7 +71,7 @@ public class TaskProcessSender implements ITaskProcessReceiver {
      * @param output 输出信息
      */
     @Override
-    public void taskOutput(ComfyUITaskOutput output) {
+    public void taskOutput(ComfyTaskOutput output) {
         handlers.forEach(handler -> handler.taskOutput(output));
     }
 
@@ -80,7 +81,7 @@ public class TaskProcessSender implements ITaskProcessReceiver {
      * @param complete 任务完成信息
      */
     @Override
-    public void taskComplete(ComfyUITaskComplete complete) {
+    public void taskComplete(ComfyTaskComplete complete) {
         handlers.forEach(handler -> handler.taskComplete(complete));
     }
 
@@ -90,7 +91,7 @@ public class TaskProcessSender implements ITaskProcessReceiver {
      * @param error 任务错误信息
      */
     @Override
-    public void taskError(ComfyUITaskError error) {
+    public void taskError(ComfyTaskError error) {
         handlers.forEach(handler -> handler.taskError(error));
     }
 
@@ -100,7 +101,7 @@ public class TaskProcessSender implements ITaskProcessReceiver {
      * @param taskNumber 队列任务信息
      */
     @Override
-    public void taskNumberUpdate(ComfyUITaskNumber taskNumber) {
+    public void taskNumberUpdate(ComfyTaskNumber taskNumber) {
         handlers.forEach(handler -> handler.taskNumberUpdate(taskNumber));
     }
 
@@ -110,7 +111,7 @@ public class TaskProcessSender implements ITaskProcessReceiver {
      * @param performance 系统状态
      */
     @Override
-    public void systemPerformance(ComfyUISystemPerformance performance) {
+    public void systemPerformance(ComfySystemPerformance performance) {
         handlers.forEach(handler -> handler.systemPerformance(performance));
     }
 }

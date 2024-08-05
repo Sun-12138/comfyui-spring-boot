@@ -3,13 +3,14 @@ package com.comfyui.queue;
 import com.comfyui.common.DrawingTaskExecutor;
 import com.comfyui.common.DrawingTaskInfo;
 import com.comfyui.common.IDrawingTaskSubmit;
-import com.comfyui.node.ComfyUIWorkFlow;
+import com.comfyui.node.ComfyWorkFlow;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.*;
 
 /**
  * 绘图任务队列管理者
+ * @author Sun_12138
  */
 @Slf4j
 public class DrawingTaskQueueManager implements IDrawingTaskSubmit {
@@ -40,17 +41,7 @@ public class DrawingTaskQueueManager implements IDrawingTaskSubmit {
      */
     @Override
     public boolean submit(DrawingTaskInfo taskInfo) {
-        return this.submitTask(taskInfo);
-    }
-
-    /**
-     * 提交绘图任务
-     *
-     * @param task 绘图任务对象
-     * @return 提交是否成功
-     */
-    public boolean submitTask(DrawingTaskInfo task) {
-        return taskQueue.offer(task);
+        return taskQueue.offer(taskInfo);
     }
 
     /**
@@ -68,9 +59,11 @@ public class DrawingTaskQueueManager implements IDrawingTaskSubmit {
             try {
                 synchronized (taskQueue) {
                     DrawingTaskInfo taskInfo = taskQueue.peek();
-                    if (taskInfo == null) continue;
+                    if (taskInfo == null) {
+                        continue;
+                    }
                     String taskId = taskInfo.taskId();
-                    ComfyUIWorkFlow flow = taskInfo.flow();
+                    ComfyWorkFlow flow = taskInfo.flow();
                     long timeout = taskInfo.timeout();
                     TimeUnit unit = taskInfo.unit();
                     //执行绘图任务

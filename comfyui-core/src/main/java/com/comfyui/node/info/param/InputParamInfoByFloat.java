@@ -2,8 +2,9 @@ package com.comfyui.node.info.param;
 
 /**
  * Float类型的节点输入信息
+ * @author Sun_12138
  */
-public class InputParamInfoByFloat extends InputParamInfo {
+public class InputParamInfoByFloat extends AbstractInputParamInfo {
 
     /**
      * 创建类型为Int或Float的参数信息

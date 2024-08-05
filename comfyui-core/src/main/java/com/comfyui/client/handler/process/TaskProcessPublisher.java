@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * ComfyUI任务进度发布者 发布SpringApplication Event和发布订阅模式
+ * @author Sun_12138
  */
 @Component
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public final class TaskProcessPublisher implements ITaskProcessReceiver, ITaskPr
      * @param start 任务开始信息
      */
     @Override
-    public void taskStart(ComfyUITaskStart start) {
+    public void taskStart(ComfyTaskStart start) {
         publishApplicationEventAndSubject(TaskProcessType.START, start.taskId(), start);
     }
 
@@ -34,7 +35,7 @@ public final class TaskProcessPublisher implements ITaskProcessReceiver, ITaskPr
      * @param progress 进度信息
      */
     @Override
-    public void taskNodeProgress(ComfyUITaskNodeProgress progress) {
+    public void taskNodeProgress(ComfyTaskNodeProgress progress) {
         publishApplicationEventAndSubject(TaskProcessType.PROGRESS, progress.taskId(), progress);
     }
 
@@ -44,7 +45,7 @@ public final class TaskProcessPublisher implements ITaskProcessReceiver, ITaskPr
      * @param preview 预览图信息
      */
     @Override
-    public void taskProgressPreview(ComfyUITaskProgressPreview preview) {
+    public void taskProgressPreview(ComfyTaskProgressPreview preview) {
         publishApplicationEventAndSubject(TaskProcessType.PREVIEW, preview.taskId(), preview);
     }
 
@@ -54,7 +55,7 @@ public final class TaskProcessPublisher implements ITaskProcessReceiver, ITaskPr
      * @param output 输出信息
      */
     @Override
-    public void taskOutput(ComfyUITaskOutput output) {
+    public void taskOutput(ComfyTaskOutput output) {
         publishApplicationEventAndSubject(TaskProcessType.OUTPUT, output.taskId(), output);
     }
 
@@ -64,7 +65,7 @@ public final class TaskProcessPublisher implements ITaskProcessReceiver, ITaskPr
      * @param complete 任务完成信息
      */
     @Override
-    public void taskComplete(ComfyUITaskComplete complete) {
+    public void taskComplete(ComfyTaskComplete complete) {
         publishApplicationEventAndSubject(TaskProcessType.COMPLETE, complete.taskId(), complete);
     }
 
@@ -74,7 +75,7 @@ public final class TaskProcessPublisher implements ITaskProcessReceiver, ITaskPr
      * @param error 任务错误信息
      */
     @Override
-    public void taskError(ComfyUITaskError error) {
+    public void taskError(ComfyTaskError error) {
         publishApplicationEventAndSubject(TaskProcessType.ERROR, error.taskId(), error);
     }
 
@@ -84,7 +85,7 @@ public final class TaskProcessPublisher implements ITaskProcessReceiver, ITaskPr
      * @param taskNumber 队列任务信息
      */
     @Override
-    public void taskNumberUpdate(ComfyUITaskNumber taskNumber) {
+    public void taskNumberUpdate(ComfyTaskNumber taskNumber) {
         publishApplicationEventAndSubject(TaskProcessType.NUMBER_UPDATE, taskNumber);
     }
 
@@ -94,7 +95,7 @@ public final class TaskProcessPublisher implements ITaskProcessReceiver, ITaskPr
      * @param performance 系统状态
      */
     @Override
-    public void systemPerformance(ComfyUISystemPerformance performance) {
+    public void systemPerformance(ComfySystemPerformance performance) {
         publishApplicationEventAndSubject(TaskProcessType.SYSTEM_PERFORMANCE, performance);
     }
 
@@ -104,7 +105,7 @@ public final class TaskProcessPublisher implements ITaskProcessReceiver, ITaskPr
      * @param eventType 事件类型
      * @param process   事件数据
      */
-    private void publishApplicationEventAndSubject(TaskProcessType eventType, IComfyUITaskProcess process) {
+    private void publishApplicationEventAndSubject(TaskProcessType eventType, IComfyTaskProcess process) {
         TaskProcessInfo<?> subject = new TaskProcessInfo<>(eventType, null, process, this);
         publish(eventType, subject);
         eventPublisher.publishEvent(subject);
@@ -117,7 +118,7 @@ public final class TaskProcessPublisher implements ITaskProcessReceiver, ITaskPr
      * @param taskId    任务id
      * @param process   事件数据
      */
-    private void publishApplicationEventAndSubject(TaskProcessType eventType, String taskId, IComfyUITaskProcess process) {
+    private void publishApplicationEventAndSubject(TaskProcessType eventType, String taskId, IComfyTaskProcess process) {
         TaskProcessInfo<?> subject = new TaskProcessInfo<>(eventType, taskId, process, this);
         publish(eventType, subject);
         eventPublisher.publishEvent(subject);

@@ -1,19 +1,20 @@
 package com.comfyui.client.handler.process;
 
 import com.comfyui.client.enums.TaskProcessType;
-import com.comfyui.entity.IComfyUITaskProcess;
+import com.comfyui.entity.IComfyTaskProcess;
 
 import java.util.*;
 
 /**
  * 绘图任务进度发布者抽象类
+ * @author Sun_12138
  */
 public interface ITaskProcessSubjectPublisher {
 
     /**
      * key为类型
      */
-    Map<Key, List<ITaskProcessSubjectSubscriber>> subMap = new HashMap<>();
+    Map<Key, List<ITaskProcessSubjectSubscriber>> SUB_MAP = new HashMap<>();
 
     /**
      * 订阅事件 用于绑定
@@ -36,7 +37,7 @@ public interface ITaskProcessSubjectPublisher {
      * @param subscriber 订阅者
      */
     default void subscribe(String taskId, TaskProcessType eventType, ITaskProcessSubjectSubscriber subscriber) {
-        subMap.computeIfAbsent(new Key(taskId, eventType), k -> new ArrayList<>()).add(subscriber);
+        SUB_MAP.computeIfAbsent(new Key(taskId, eventType), k -> new ArrayList<>()).add(subscriber);
     }
 
     /**
@@ -46,8 +47,8 @@ public interface ITaskProcessSubjectPublisher {
      * @param event     事件数据
      * @param <E>       事件数据类型
      */
-    default <E extends IComfyUITaskProcess> void publish(TaskProcessType eventType, TaskProcessInfo<E> event) {
-        List<ITaskProcessSubjectSubscriber> subList = subMap.getOrDefault(new Key(event.getTaskId(), eventType), new ArrayList<>());
+    default <E extends IComfyTaskProcess> void publish(TaskProcessType eventType, TaskProcessInfo<E> event) {
+        List<ITaskProcessSubjectSubscriber> subList = SUB_MAP.getOrDefault(new Key(event.getTaskId(), eventType), new ArrayList<>());
         for (ITaskProcessSubjectSubscriber sub : subList) {
             sub.notify(event);
         }
@@ -77,7 +78,7 @@ public interface ITaskProcessSubjectPublisher {
         if (eventType == TaskProcessType.SYSTEM_PERFORMANCE || eventType == TaskProcessType.NUMBER_UPDATE) {
             throw new IllegalArgumentException("eventType cannot be system_performance or number_update");
         }
-        List<ITaskProcessSubjectSubscriber> subList = subMap.get(new Key(taskId, eventType));
+        List<ITaskProcessSubjectSubscriber> subList = SUB_MAP.get(new Key(taskId, eventType));
         if (subList != null) {
             subList.remove(subscriber);
         }

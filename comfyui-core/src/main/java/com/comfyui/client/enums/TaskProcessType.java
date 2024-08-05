@@ -2,6 +2,7 @@ package com.comfyui.client.enums;
 
 /**
  * 绘画任务进度类型
+ * @author Sun_12138
  */
 public enum TaskProcessType {
     /**

@@ -1,9 +1,9 @@
 package com.comfyui.client.handler.strategy;
 
-import com.comfyui.client.ComfyUIWebSocketClient;
-import com.comfyui.client.enums.ComfyUITaskMsgType;
+import com.comfyui.client.ComfyWebSocketClient;
+import com.comfyui.client.enums.ComfyTaskMsgType;
 import com.comfyui.client.handler.TaskProcessSender;
-import com.comfyui.entity.ComfyUITaskError;
+import com.comfyui.entity.ComfyTaskError;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.*;
@@ -11,16 +11,21 @@ import org.springframework.stereotype.Component;
 
 /**
  * 任务中断或取消
+ * @author Sun_12138
  */
 @Component
 @RequiredArgsConstructor
-public class TaskInterruptedHandleStrategy implements IComfyUIWebSocketTextHandleStrategy {
+public class TaskInterruptedHandleStrategy implements IComfyWebSocketTextHandleStrategy {
 
     private final ApplicationContext applicationContext;
 
-    //解决循环依赖
-    private ComfyUIWebSocketClient getWebSocketClientBean() {
-        return applicationContext.getBean(ComfyUIWebSocketClient.class);
+    /**
+     * 获得WebSocketClientBean(解决循环依赖)
+     *
+     * @return ComfyUIWebSocketClient
+     */
+    private ComfyWebSocketClient getWebSocketClientBean() {
+        return applicationContext.getBean(ComfyWebSocketClient.class);
     }
 
 
@@ -33,9 +38,9 @@ public class TaskInterruptedHandleStrategy implements IComfyUIWebSocketTextHandl
      * @param ctx           上下文任务状态
      */
     @Override
-    public void handleMessage(ComfyUITaskMsgType msgType, JsonNode dataNode, TaskProcessSender processSender, TaskHandlerStrategyContext ctx) {
+    public void handleMessage(ComfyTaskMsgType msgType, JsonNode dataNode, TaskProcessSender processSender, TaskHandlerStrategyContext ctx) {
         //关闭ws客户端的监听状态
         getWebSocketClientBean().stopDrawingTask();
-        processSender.taskError(new ComfyUITaskError(ctx.taskId(), ctx.comfyUITaskId(), "任务被取消"));
+        processSender.taskError(new ComfyTaskError(ctx.taskId(), ctx.comfyTaskId(), "任务被取消"));
     }
 }

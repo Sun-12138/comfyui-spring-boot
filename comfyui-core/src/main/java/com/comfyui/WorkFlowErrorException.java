@@ -2,6 +2,7 @@ package com.comfyui;
 
 /**
  * 工作流错误
+ * @author Sun_12138
  */
 public class WorkFlowErrorException extends RuntimeException {
 

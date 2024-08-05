@@ -1,15 +1,16 @@
 package com.comfyui.client.handler.strategy;
 
-import com.comfyui.client.enums.ComfyUITaskMsgType;
+import com.comfyui.client.enums.ComfyTaskMsgType;
 import com.comfyui.client.handler.TaskProcessSender;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
 
 /**
  * 缓存任务
+ * @author Sun_12138
  */
 @Component
-public class TaskCacheHandleStrategy implements IComfyUIWebSocketTextHandleStrategy {
+public class TaskCacheHandleStrategy implements IComfyWebSocketTextHandleStrategy {
 
     /**
      * 处理消息
@@ -20,7 +21,7 @@ public class TaskCacheHandleStrategy implements IComfyUIWebSocketTextHandleStrat
      * @param ctx           上下文任务状态
      */
     @Override
-    public void handleMessage(ComfyUITaskMsgType msgType, JsonNode dataNode, TaskProcessSender processSender, TaskHandlerStrategyContext ctx) {
+    public void handleMessage(ComfyTaskMsgType msgType, JsonNode dataNode, TaskProcessSender processSender, TaskHandlerStrategyContext ctx) {
 
     }
 }

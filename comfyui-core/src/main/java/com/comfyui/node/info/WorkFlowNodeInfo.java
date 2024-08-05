@@ -17,6 +17,8 @@ import java.util.Map;
 
 /**
  * 工作流节点信息
+ *
+ * @author Sun_12138
  */
 @Data
 @JsonDeserialize(using = WorkFlowNodeInfo.Deserializer.class)
@@ -25,7 +27,7 @@ public class WorkFlowNodeInfo {
     /**
      * 输入参数 key为参数名
      */
-    private Map<String, InputParamInfo> inputParam;
+    private Map<String, AbstractInputParamInfo> inputParam;
 
     /**
      * 接收端点信息
@@ -103,63 +105,67 @@ public class WorkFlowNodeInfo {
         }
 
         /**
-         * 将node转为{@link InputParamInfo}对象 key为参数名
+         * 将node转为{@link AbstractInputParamInfo}对象 key为参数名
          *
          * @param node 需要转换的节点
          */
         private void deserializeInput(JsonNode node) {
+            if (node == null) {
+                return;
+            }
             //参数输入
-            Map<String, InputParamInfo> resultInputs = new HashMap<>();
+            Map<String, AbstractInputParamInfo> resultInputs = new HashMap<>(node.size());
             //节点输入
             List<EndpointInfo> inputNode = new ArrayList<>();
-            if (node != null) {
-                node.fieldNames().forEachRemaining(paramName -> {
-                    InputParamInfo infoObj = null;
-                    ArrayNode infoListNode = (ArrayNode) node.get(paramName);
-                    if (infoListNode.size() == 1) {
-                        //当前为Select类型或节点输入
-                        JsonNode oneNode = infoListNode.get(0);
-                        if (oneNode.isArray()) {
-                            //为Select类型
-                            List<String> selectList = new ArrayList<>();
-                            oneNode.forEach(i -> selectList.add(i.asText()));
-                            infoObj = new InputParamInfoBySelect(paramName, selectList);
-                            resultInputs.put(paramName, infoObj);
-                        } else if (oneNode.isTextual()) {
-                            //为节点输入
-                            inputNode.add(new EndpointInfo(paramName, oneNode.asText()));
-                        }
-                        return;
+            node.fieldNames().forEachRemaining(paramName -> {
+                AbstractInputParamInfo infoObj;
+                ArrayNode infoListNode = (ArrayNode) node.get(paramName);
+                if (infoListNode.size() == 1) {
+                    //当前为Select类型或节点输入
+                    JsonNode oneNode = infoListNode.get(0);
+                    if (oneNode.isArray()) {
+                        //为Select类型
+                        List<String> selectList = new ArrayList<>();
+                        oneNode.forEach(i -> selectList.add(i.asText()));
+                        infoObj = new InputParamInfoBySelect(paramName, selectList);
+                        resultInputs.put(paramName, infoObj);
+                    } else if (oneNode.isTextual()) {
+                        //为节点输入
+                        inputNode.add(new EndpointInfo(paramName, oneNode.asText()));
                     }
-                    JsonNode paramInfoNode = infoListNode.get(1);
-                    //判断参数类型
-                    switch (infoListNode.get(0).asText()) {
-                        case "INT":
-                            int defaultValueByInt = paramInfoNode.get("default").asInt();
-                            int maxValueByInt = paramInfoNode.has("max") ? paramInfoNode.get("max").asInt() : Integer.MAX_VALUE;
-                            int minValueByInt = paramInfoNode.has("min") ? paramInfoNode.get("min").asInt() : Integer.MIN_VALUE;
-                            int stepCountByInt = paramInfoNode.has("step") ? paramInfoNode.get("step").asInt() : -1;
-                            infoObj = new InputParamInfoByInt(paramName, InputParamType.Int, defaultValueByInt, maxValueByInt, minValueByInt, stepCountByInt);
-                            break;
-                        case "FLOAT":
-                            float defaultValueByFloat = (float) paramInfoNode.get("default").asDouble();
-                            float maxValueByFloat = paramInfoNode.has("max") ? (float) paramInfoNode.get("max").asDouble() : Float.MAX_VALUE;
-                            float minValueByFloat = paramInfoNode.has("min") ? (float) paramInfoNode.get("min").asDouble() : Float.MIN_VALUE;
-                            float stepCountByFloat = paramInfoNode.has("step") ? (float) paramInfoNode.get("step").asDouble() : -1f;
-                            infoObj = new InputParamInfoByFloat(paramName, InputParamType.Float, defaultValueByFloat, maxValueByFloat, minValueByFloat, stepCountByFloat);
-                            break;
-                        case "STRING":
-                            String defaultValueByStr = paramInfoNode.has("default") ? paramInfoNode.get("default").asText() : "";
-                            infoObj = new InputParamInfoByString(paramName, InputParamType.String, defaultValueByStr);
-                            break;
-                        case "BOOLEAN":
-                            Boolean defaultValueByBool = paramInfoNode.has("default") ? paramInfoNode.get("default").asBoolean() : Boolean.FALSE;
-                            infoObj = new InputParamInfoByBoolean(paramName, InputParamType.Boolean, defaultValueByBool);
-                            break;
-                    }
-                    resultInputs.put(paramName, infoObj);
-                });
-            }
+                    return;
+                }
+                JsonNode paramInfoNode = infoListNode.get(1);
+                //判断参数类型
+                String paramType = infoListNode.get(0).asText();
+                switch (paramType) {
+                    case "INT":
+                        int defaultValueByInt = paramInfoNode.get("default").asInt();
+                        int maxValueByInt = paramInfoNode.has("max") ? paramInfoNode.get("max").asInt() : Integer.MAX_VALUE;
+                        int minValueByInt = paramInfoNode.has("min") ? paramInfoNode.get("min").asInt() : Integer.MIN_VALUE;
+                        int stepCountByInt = paramInfoNode.has("step") ? paramInfoNode.get("step").asInt() : -1;
+                        infoObj = new InputParamInfoByInt(paramName, InputParamType.Int, defaultValueByInt, maxValueByInt, minValueByInt, stepCountByInt);
+                        break;
+                    case "FLOAT":
+                        float defaultValueByFloat = (float) paramInfoNode.get("default").asDouble();
+                        float maxValueByFloat = paramInfoNode.has("max") ? (float) paramInfoNode.get("max").asDouble() : Float.MAX_VALUE;
+                        float minValueByFloat = paramInfoNode.has("min") ? (float) paramInfoNode.get("min").asDouble() : Float.MIN_VALUE;
+                        float stepCountByFloat = paramInfoNode.has("step") ? (float) paramInfoNode.get("step").asDouble() : -1f;
+                        infoObj = new InputParamInfoByFloat(paramName, InputParamType.Float, defaultValueByFloat, maxValueByFloat, minValueByFloat, stepCountByFloat);
+                        break;
+                    case "STRING":
+                        String defaultValueByStr = paramInfoNode.has("default") ? paramInfoNode.get("default").asText() : "";
+                        infoObj = new InputParamInfoByString(paramName, InputParamType.String, defaultValueByStr);
+                        break;
+                    case "BOOLEAN":
+                        Boolean defaultValueByBool = paramInfoNode.has("default") ? paramInfoNode.get("default").asBoolean() : Boolean.FALSE;
+                        infoObj = new InputParamInfoByBoolean(paramName, InputParamType.Boolean, defaultValueByBool);
+                        break;
+                    default:
+                        throw new RuntimeException("Unknown InputParamType " + paramType);
+                }
+                resultInputs.put(paramName, infoObj);
+            });
             targetNodeInfo.inputParam = resultInputs;
             targetNodeInfo.inputNode = inputNode;
         }

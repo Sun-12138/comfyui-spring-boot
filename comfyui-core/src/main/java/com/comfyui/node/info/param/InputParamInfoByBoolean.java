@@ -2,8 +2,9 @@ package com.comfyui.node.info.param;
 
 /**
  * Boolean类型的节点输入信息
+ * @author Sun_12138
  */
-public class InputParamInfoByBoolean extends InputParamInfo {
+public class InputParamInfoByBoolean extends AbstractInputParamInfo {
 
 
     /**

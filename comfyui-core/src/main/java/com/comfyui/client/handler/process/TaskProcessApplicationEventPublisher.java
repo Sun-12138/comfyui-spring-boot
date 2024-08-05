@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * ComfyUI绘图进度Application事件发布者
+ * @author Sun_12138
  */
 @Component
 @RequiredArgsConstructor
