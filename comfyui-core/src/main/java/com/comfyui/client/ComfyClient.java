@@ -9,7 +9,6 @@ import com.comfyui.entity.ComfyTaskHistoryInfo;
 import com.comfyui.entity.ComfyTaskImage;
 import com.comfyui.entity.ComfyTaskQueueStatus;
 import com.comfyui.node.ComfyWorkFlow;
-import com.comfyui.node.info.WorkFlowNodeInfo;
 import com.comfyui.WorkFlowErrorException;
 import com.comfyui.utils.JsonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -68,40 +67,6 @@ public class ComfyClient implements IComfyClientApi {
             throw new WorkFlowErrorException("工作流节点错误");
         }
         return taskIdNode.asText();
-    }
-
-    /**
-     * api: /object_info<br>
-     * 获得所有工作节点信息
-     *
-     * @return 所有节点信息 key为节点class value为节点信息
-     */
-    @Override
-    public Map<String, WorkFlowNodeInfo> getAllNodeInfo() {
-        HttpRequest req = HttpRequest.get(serverUri + "object_info")
-                .timeout(2000);
-        String json = execHttpRequest(req);
-        return JsonUtils.toMapObject(json, WorkFlowNodeInfo.class);
-    }
-
-    /**
-     * api：/object_info/{node_class}<br>
-     * 获取某个节点信息
-     *
-     * @param nodeClass 节点class
-     * @return 节点信息
-     */
-    @Override
-    public WorkFlowNodeInfo getNodeInfoByClass(String nodeClass) {
-        HttpRequest req = HttpRequest.get(serverUri + "object_info/" + nodeClass)
-                .timeout(2000);
-        String json = execHttpRequest(req);
-        try {
-            return JsonUtils.toObject(json, WorkFlowNodeInfo.class);
-        } catch (Exception e) {
-            return null;
-        }
-
     }
 
     /**

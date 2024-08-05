@@ -3,7 +3,6 @@ package com.comfyui.client;
 import com.comfyui.entity.ComfySystemEnvironment;
 import com.comfyui.entity.ComfyTaskImage;
 import com.comfyui.node.ComfyWorkFlow;
-import com.comfyui.node.info.WorkFlowNodeInfo;
 import com.comfyui.entity.ComfyTaskHistoryInfo;
 import com.comfyui.entity.ComfyTaskQueueStatus;
 
@@ -25,23 +24,6 @@ public interface IComfyClientApi {
      * @return ComfyUI内部任务id
      */
     String submitDrawTask(String taskId, ComfyWorkFlow flow);
-
-    /**
-     * api: /object_info<br>
-     * 获得所有工作节点信息
-     *
-     * @return 所有节点信息 key为节点class value为节点信息
-     */
-    Map<String, WorkFlowNodeInfo> getAllNodeInfo();
-
-    /**
-     * api：/object_info/{node_class}<br>
-     * 通过节点class获取某个节点信息
-     *
-     * @param nodeClass 节点class
-     * @return 节点信息
-     */
-    WorkFlowNodeInfo getNodeInfoByClass(String nodeClass);
 
     /**
      * api: /history<br>
