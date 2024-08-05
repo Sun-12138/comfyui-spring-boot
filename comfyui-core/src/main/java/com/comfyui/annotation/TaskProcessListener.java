@@ -1,6 +1,7 @@
 package com.comfyui.annotation;
 
 import com.comfyui.client.enums.TaskProcessType;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,6 +14,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD, ElementType.TYPE}) // 仅用于方法
 @Retention(RetentionPolicy.RUNTIME)
+@MessageMapping
 public @interface TaskProcessListener {
     /**
      * 监听的进度类型
