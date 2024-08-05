@@ -22,6 +22,6 @@ public class ComfyQueueAutoConfiguration {
     @ConditionalOnProperty(name = ComfyQueueProperties.PREFIX + ".type", havingValue = "queue")
     public IDrawingTaskSubmit queueTaskSubmitStrategy(DrawingTaskExecutor taskExecutor) {
         log.info("ComfyUITaskQueue: queue");
-        return new DrawingTaskQueueManager(taskExecutor);
+        return new DrawingTaskQueueService(taskExecutor);
     }
 }

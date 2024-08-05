@@ -13,7 +13,7 @@ import java.util.concurrent.*;
  * @author Sun_12138
  */
 @Slf4j
-public class DrawingTaskQueueManager implements IDrawingTaskSubmit {
+public class DrawingTaskQueueService implements IDrawingTaskSubmit {
     private final ExecutorService executorService;
 
     /**
@@ -26,7 +26,7 @@ public class DrawingTaskQueueManager implements IDrawingTaskSubmit {
      */
     private final DrawingTaskExecutor taskExecutor;
 
-    public DrawingTaskQueueManager(DrawingTaskExecutor taskExecutor) {
+    public DrawingTaskQueueService(DrawingTaskExecutor taskExecutor) {
         this.executorService = Executors.newSingleThreadExecutor();
         this.taskQueue = new LinkedBlockingQueue<>();
         this.taskExecutor = taskExecutor;

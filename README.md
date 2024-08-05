@@ -34,7 +34,7 @@ spring-boot-comfyui提交一个任务会有两种任务id
   <dependency>
       <groupId>io.github.sun-12138</groupId>
       <artifactId>comfyui-spring-boot-starter</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.3</version>
   </dependency>
   ```
 
@@ -75,95 +75,102 @@ spring-boot-comfyui提交一个任务会有两种任务id
 
 - 监听任务进度
 
-  实现ITaskProcessReceiver接口并注册为bean
+  1. 方法1: 实现ITaskProcessReceiver接口并注册为bean
 
-  例:
+     例:
 
-  ```java
-  @Slf4j
-  @Component
-  public class TaskProcessMonitor implements ITaskProcessReceiver {
-      /**
-       * 任务开始
-       *
-       * @param start 任务开始信息
-       */
-      @Override
-      public void taskStart(ComfyTaskStart start) {
-          log.info("任务开始, 任务id:{}", start.taskId());
-      }
-  
-      /**
-       * 当前执行的节点和节点执行进度
-       *
-       * @param progress 进度信息
-       */
-      @Override
-      public void taskNodeProgress(ComfyTaskNodeProgress progress) {
-          log.info("任务进度更新, 任务id: {}, 内部任务id: {}, 当前节点id: {}, 当前进度:{}%", progress.taskId(), progress.comfyTaskId(), progress.nodeId(), progress.percent() * 100);
-      }
-  
-      /**
-       * 任务进度预览效果图
-       *
-       * @param preview 预览图信息
-       */
-      @Override
-      public void taskProgressPreview(ComfyTaskProgressPreview preview) {
-          log.info("任务进度预览, 任务id: {}, 内部任务id: {}, 预览: <图片>", preview.taskId(), preview.comfyTaskId());
-      }
-  
-      /**
-       * 任务输出的图片
-       *
-       * @param output 输出信息
-       */
-      @Override
-      public void taskOutput(ComfyTaskOutput output) {
-          log.info("任务输出结果, 任务id: {}, 内部任务id: {}", output.taskId(), output.comfyTaskId());
-      }
-  
-      /**
-       * 任务完成
-       *
-       * @param complete 任务完成信息
-       */
-      @Override
-      public void taskComplete(ComfyTaskComplete complete) {
-          log.info("任务完成, 任务id: {}, 内部任务id: {}", complete.taskId(), complete.comfyTaskId());
-      }
-  
-      /**
-       * 任务失败
-       *
-       * @param error 任务错误信息
-       */
-      @Override
-      public void taskError(ComfyTaskError error) {
-          log.error("任务错误， 任务id:{}, 内部任务id: {}, 错误信息: {}", error.taskId(), error.comfyTaskId(), error.errorInfo());
-      }
-  
-      /**
-       * 绘图队列任务个数更新
-       *
-       * @param taskNumber 队列任务信息
-       */
-      @Override
-      public void taskNumberUpdate(ComfyTaskNumber taskNumber) {
-  
-      }
-  
-      /**
-       * 当前系统负载
-       *
-       * @param performance 系统状态
-       */
-      @Override
-      public void systemPerformance(ComfySystemPerformance performance) {
-  
-      }
-  }
-  ```
+     ```java
+     @Slf4j
+     @Component
+     public class TaskProcessMonitor implements ITaskProcessReceiver {
+         /**
+          * 任务开始
+          *
+          * @param start 任务开始信息
+          */
+         @Override
+         public void taskStart(ComfyTaskStart start) {
+             log.info("任务开始, 任务id:{}", start.taskId());
+         }
+     
+         /**
+          * 当前执行的节点和节点执行进度
+          *
+          * @param progress 进度信息
+          */
+         @Override
+         public void taskNodeProgress(ComfyTaskNodeProgress progress) {
+             log.info("任务进度更新, 任务id: {}, 内部任务id: {}, 当前节点id: {}, 当前进度:{}%", progress.taskId(), progress.comfyTaskId(), progress.nodeId(), progress.percent() * 100);
+         }
+     
+         /**
+          * 任务进度预览效果图
+          *
+          * @param preview 预览图信息
+          */
+         @Override
+         public void taskProgressPreview(ComfyTaskProgressPreview preview) {
+             log.info("任务进度预览, 任务id: {}, 内部任务id: {}, 预览: <图片>", preview.taskId(), preview.comfyTaskId());
+         }
+     
+         /**
+          * 任务输出的图片
+          *
+          * @param output 输出信息
+          */
+         @Override
+         public void taskOutput(ComfyTaskOutput output) {
+             log.info("任务输出结果, 任务id: {}, 内部任务id: {}", output.taskId(), output.comfyTaskId());
+         }
+     
+         /**
+          * 任务完成
+          *
+          * @param complete 任务完成信息
+          */
+         @Override
+         public void taskComplete(ComfyTaskComplete complete) {
+             log.info("任务完成, 任务id: {}, 内部任务id: {}", complete.taskId(), complete.comfyTaskId());
+         }
+     
+         /**
+          * 任务失败
+          *
+          * @param error 任务错误信息
+          */
+         @Override
+         public void taskError(ComfyTaskError error) {
+             log.error("任务错误， 任务id:{}, 内部任务id: {}, 错误信息: {}", error.taskId(), error.comfyTaskId(), error.errorInfo());
+         }
+     
+         /**
+          * 绘图队列任务个数更新
+          *
+          * @param taskNumber 队列任务信息
+          */
+         @Override
+         public void taskNumberUpdate(ComfyTaskNumber taskNumber) {}
+     
+         /**
+          * 当前系统负载
+          *
+          * @param performance 系统状态
+          */
+         @Override
+         public void systemPerformance(ComfySystemPerformance performance) {}
+     }
+     ```
+
+  2. 方法2: 使用@TaskProcessListener注解
+
+     例:
+
+     ```java
+     @TaskProcessListener(TaskProcessType.SYSTEM_PERFORMANCE)
+     private void testListener(ComfySystemPerformance comfySystemPerformance) {
+         log.info("系统性能监听器接收到消息：{}", comfySystemPerformance);
+     }
+     ```
 
 - 提交任务
 
@@ -271,5 +278,3 @@ ComfyWorkFlowNode.inputes对应工作流节点中的inputs
   }
 }
 ```
-
-#### 

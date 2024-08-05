@@ -6,14 +6,13 @@
     <parent>
         <groupId>io.github.sun-12138</groupId>
         <artifactId>comfyui-spring-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.3</version>
     </parent>
 
     <artifactId>comfyui-queue</artifactId>
 
     <properties>
         <java.version>17</java.version>
-        <rocketmq.version>2.3.1</rocketmq.version>
     </properties>
 
     <dependencies>
@@ -28,14 +27,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- RocketMQ -->
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-spring-boot-starter</artifactId>
-            <version>${rocketmq.version}</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
