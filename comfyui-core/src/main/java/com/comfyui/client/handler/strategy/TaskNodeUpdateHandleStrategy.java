@@ -45,7 +45,7 @@ public class TaskNodeUpdateHandleStrategy implements IComfyWebSocketTextHandleSt
         //为节点更新信息
         String nodeId = dataNode.get("node").asText();
         //当前消息没有真实进度 使用虚假进度
-        processSender.taskNodeProgress(new ComfyTaskNodeProgress(ctx.taskId(), ctx.comfyTaskId(), 0, 0, 0.0, nodeId));
+        processSender.taskNodeProgress(new ComfyTaskNodeProgress(ctx.taskId(), ctx.comfyTaskId(), 0, 0, 1.0, ctx.getWorkFlowNode(nodeId)));
     }
 
     /**

@@ -27,6 +27,7 @@ public class TaskOutputHandleStrategy implements IComfyWebSocketTextHandleStrate
      */
     @Override
     public void handleMessage(ComfyTaskMsgType msgType, JsonNode dataNode, TaskProcessSender processSender, TaskHandlerStrategyContext ctx) {
+        String nodeId = dataNode.get("node").asText();
         JsonNode imagesNode = dataNode.get("output").get("images");
         //获取上下文输出的图片信息
         List<ComfyTaskImage> outputImagesContext = ctx.outputImages();
@@ -36,6 +37,6 @@ public class TaskOutputHandleStrategy implements IComfyWebSocketTextHandleStrate
             currentOutputImages.add(imageInfo);
         }
         outputImagesContext.addAll(currentOutputImages);
-        processSender.taskOutput(new ComfyTaskOutput(ctx.taskId(), ctx.comfyTaskId(), currentOutputImages));
+        processSender.taskOutput(new ComfyTaskOutput(ctx.taskId(), ctx.comfyTaskId(), currentOutputImages, ctx.getWorkFlowNode(nodeId)));
     }
 }

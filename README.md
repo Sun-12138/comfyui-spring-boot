@@ -100,7 +100,7 @@ spring-boot-comfyui提交一个任务会有两种任务id
           */
          @Override
          public void taskNodeProgress(ComfyTaskNodeProgress progress) {
-             log.info("任务进度更新, 任务id: {}, 内部任务id: {}, 当前节点id: {}, 当前进度:{}%", progress.taskId(), progress.comfyTaskId(), progress.nodeId(), progress.percent() * 100);
+             log.info("任务进度更新, 任务id: {}, 内部任务id: {}, 当前节点名: {}, 当前进度:{}%", progress.taskId(), progress.comfyTaskId(), progress.node().title(), progress.percent() * 100);
          }
      
          /**
@@ -120,7 +120,7 @@ spring-boot-comfyui提交一个任务会有两种任务id
           */
          @Override
          public void taskOutput(ComfyTaskOutput output) {
-             log.info("任务输出结果, 任务id: {}, 内部任务id: {}", output.taskId(), output.comfyTaskId());
+             log.info("任务输出结果, 任务id: {}, 节点名: {}, 内部任务id: {}", output.taskId(), output.node().title(), output.comfyTaskId());
          }
      
          /**

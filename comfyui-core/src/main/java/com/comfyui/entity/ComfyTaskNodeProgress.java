@@ -1,5 +1,6 @@
 package com.comfyui.entity;
 
+import com.comfyui.node.ComfyWorkFlowNode;
 import com.comfyui.utils.JsonUtils;
 
 /**
@@ -11,10 +12,10 @@ import com.comfyui.utils.JsonUtils;
  * @param currentProgress 当前进度
  * @param maxProgress     总进度
  * @param percent         进度百分比
- * @param nodeId          当前任务节点id 例如 1, 2, 3
+ * @param node          当前任务节点id 例如 1, 2, 3
  */
 public record ComfyTaskNodeProgress(String taskId, String comfyTaskId, int currentProgress, int maxProgress,
-                                    double percent, String nodeId) implements IComfyTaskProcess {
+                                    double percent, ComfyWorkFlowNode node) implements IComfyTaskProcess {
     @Override
     public String toString() {
         return JsonUtils.toJsonString(this);

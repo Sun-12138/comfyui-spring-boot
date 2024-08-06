@@ -92,7 +92,7 @@ public class ComfyWebSocketClient extends WebSocketClient {
         //提交绘图任务 获得comfyUI内部任务id
         try {
             String comfyTaskId = comfyClient.submitDrawTask(taskId, flow);
-            this.taskContext = new TaskHandlerStrategyContext(taskId, comfyTaskId, new ArrayList<>());
+            this.taskContext = new TaskHandlerStrategyContext(taskId, comfyTaskId, flow, new ArrayList<>());
             return comfyTaskId;
         } catch (Exception e) {
             //发生错误则停止监听

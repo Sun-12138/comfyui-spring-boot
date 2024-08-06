@@ -30,7 +30,7 @@ public class TaskProgressHandleStrategy implements IComfyWebSocketTextHandleStra
         int max = dataNode.path("max").asInt();
         //计算进度百分比
         double percent = Double.parseDouble(String.format("%.2f", (double) current / (double) max));
-        processSender.taskNodeProgress(new ComfyTaskNodeProgress(ctx.taskId(), ctx.comfyTaskId(), current, max, percent, nodeId));
+        processSender.taskNodeProgress(new ComfyTaskNodeProgress(ctx.taskId(), ctx.comfyTaskId(), current, max, percent, ctx.getWorkFlowNode(nodeId)));
     }
 
     /**
