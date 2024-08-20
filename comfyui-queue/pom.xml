@@ -1,34 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.sun-12138</groupId>
         <artifactId>comfyui-spring-parent</artifactId>
-        <version>1.0.3</version>
+        <version>2.0.0</version>
     </parent>
 
     <artifactId>comfyui-queue</artifactId>
+    <packaging>pom</packaging>
+
+    <name>comfyui-queue</name>
+    <modules>
+        <module>comfyui-queue-common</module>
+        <module>comfyui-queue-rabbitmq</module>
+        <module>comfyui-queue-thread</module>
+    </modules>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>8</java.version>
     </properties>
 
-    <dependencies>
-        <!-- 核心模块 -->
-        <dependency>
-            <groupId>io.github.sun-12138</groupId>
-            <artifactId>comfyui-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!--RabbitMQ-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
-
+    <dependencyManagement>
+        <dependencies>
+            <!-- Queue通用模块 -->
+            <dependency>
+                <groupId>io.github.sun-12138</groupId>
+                <artifactId>comfyui-queue-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
